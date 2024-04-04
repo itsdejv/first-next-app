@@ -1,7 +1,12 @@
-import React from "react";
+import styles from "./footer.module.css";
 
 function Footer() {
-  return <div>Footer</div>;
+  return (
+    <div className={styles.container}>
+      <div className={styles.logo}>lilHopey</div>
+      <div className={styles.text}>lilHopey's first website test.</div>
+    </div>
+  );
 }
 
 export default Footer;
