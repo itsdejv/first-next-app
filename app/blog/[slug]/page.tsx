@@ -1,45 +1,44 @@
 import Image from "next/image";
 import styles from "./singlePost.module.css";
+import { PostData } from "../page";
+import { Suspense } from "react";
+import { getPost } from "@/lib/data";
+import PostUser from "@/components/postUser/PostUser";
 
-function SinglePostPage() {
+interface SinglePostPageProps {
+  params: { slug: string };
+}
+
+const SinglePostPage = async (props: SinglePostPageProps) => {
+  const { params } = props;
+  const { slug } = params;
+
+  const post: PostData = await getPost(slug);
+
   return (
     <div className={styles.container}>
-      <div className={styles.imgContainer}>
-        <Image
-          src="https://images.pexels.com/photos/4123018/pexels-photo-4123018.jpeg"
-          alt=""
-          fill
-          className={styles.img}
-        />
-      </div>
+      {post.img && (
+        <div className={styles.imgContainer}>
+          <Image src={post.img} alt="" fill className={styles.img} />
+        </div>
+      )}
       <div className={styles.textContainer}>
-        <h1 className={styles.title}>Title</h1>
+        <h1 className={styles.title}>{post.title}</h1>
         <div className={styles.detail}>
-          <Image
-            className={styles.avatar}
-            src="https://images.pexels.com/photos/4123018/pexels-photo-4123018.jpeg"
-            alt=""
-            width={50}
-            height={50}
-          />
-          <div className={styles.detailText}>
-            <span className={styles.detailTitle}>Author</span>
-            <span className={styles.detailValue}>David Rihacek</span>
-          </div>
+          <Suspense fallback={<div>Loading...</div>}>
+            <PostUser userId={post.userId} />
+          </Suspense>
           <div className={styles.detailText}>
             <span className={styles.detailTitle}>Published</span>
-            <span className={styles.detailValue}>01.01.2024</span>
+            <span className={styles.detailValue}>
+              {post.createdAt.toString().slice(4, 16)}
+            </span>
           </div>
         </div>
-        <div className={styles.content}>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Atque
-          adipisci autem ab deserunt omnis quibusdam ipsum, delectus rem
-          explicabo! Saepe voluptate, iusto obcaecati in hic animi ea? Ipsa,
-          minima possimus.
-        </div>
+        <div className={styles.content}>{post.desc}</div>
       </div>
     </div>
   );
-}
+};
 
 export default SinglePostPage;
