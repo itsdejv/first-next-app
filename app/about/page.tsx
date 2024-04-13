@@ -1,6 +1,12 @@
 import Image from "next/image";
 import styles from "./about.module.css";
 import React from "react";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "About Page",
+  description: "About description",
+};
 
 function BlogPage() {
   return (

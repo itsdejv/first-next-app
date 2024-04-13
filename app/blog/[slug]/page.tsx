@@ -5,6 +5,34 @@ import { Suspense } from "react";
 import { getPost } from "@/lib/data";
 import PostUser from "@/components/postUser/PostUser";
 
+const getDataPost = async (slug: string) => {
+  const res = await fetch(`http://localhost:3000/api/blog/${slug}`, {
+    next: { revalidate: 3600 },
+  });
+
+  if (!res.ok) {
+    throw new Error("Something went wrong!");
+  }
+
+  return res.json();
+};
+
+interface generateMetadataProps {
+  params: { slug: string };
+}
+
+export const generateMetadata = async (props: generateMetadataProps) => {
+  const { params } = props;
+  const { slug } = params;
+
+  const post: PostData = await getDataPost(slug);
+
+  return {
+    title: post.title,
+    description: post.desc,
+  };
+};
+
 interface SinglePostPageProps {
   params: { slug: string };
 }

@@ -2,6 +2,7 @@
 
 import { PostModel, UserModel } from "./models";
 import connectToDb from "./utils";
+import { unstable_noStore as noStore } from "next/cache";
 
 export const getPosts = async () => {
   try {
@@ -15,6 +16,7 @@ export const getPosts = async () => {
 };
 
 export const getPost = async (slug: string) => {
+  noStore();
   try {
     await connectToDb();
     const post = await PostModel.findOne({ slug });

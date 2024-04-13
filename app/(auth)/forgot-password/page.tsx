@@ -1,7 +1,7 @@
 import React from "react";
 
-function LoginPage() {
-  return <div>LoginPage</div>;
+function ForgotPasswordPage() {
+  return <div>ForgotPasswordPage</div>;
 }
 
-export default LoginPage;
+export default ForgotPasswordPage;
