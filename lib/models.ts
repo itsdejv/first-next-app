@@ -55,5 +55,5 @@ const postSchema = new Schema(
   { timestamps: true }
 );
 
-export const UserModel = models.user || model("user", userSchema);
-export const PostModel = models.post || model("post", postSchema);
+export const UserModel = models?.user || model("user", userSchema);
+export const PostModel = models?.post || model("post", postSchema);

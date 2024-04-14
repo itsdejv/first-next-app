@@ -1,7 +1,16 @@
+import { register } from "@/lib/actions";
 import React from "react";
+import styles from "./register.module.css";
+import RegisterForm from "@/components/registerForm/registerForm";
 
 function RegisterPage() {
-  return <div>RegisterPage</div>;
+  return (
+    <div className={styles.container}>
+      <div className={styles.wrapper}>
+        <RegisterForm />
+      </div>
+    </div>
+  );
 }
 
 export default RegisterPage;
