@@ -6,7 +6,7 @@ import connectToDb from "./utils";
 import { signIn, signOut } from "./auth";
 import bcrypt from "bcryptjs";
 
-export const addPost = async (formData: FormData) => {
+export const addPost = async (prevState, formData: FormData) => {
   const { title, description, slug, userId } = Object.fromEntries(formData);
 
   try {
@@ -16,6 +16,7 @@ export const addPost = async (formData: FormData) => {
     await newPost.save();
     console.log("saved to Db");
     revalidatePath("/blog");
+    revalidatePath("/admin");
   } catch (err) {
     console.log(err);
     return { error: "Something went wrong!" };
@@ -31,6 +32,39 @@ export const deletePost = async (formData: FormData) => {
     await PostModel.findByIdAndDelete(id);
     console.log("deleted from Db");
     revalidatePath("/blog");
+    revalidatePath("/admin");
+  } catch (err) {
+    console.log(err);
+    return { error: "Something went wrong!" };
+  }
+};
+
+export const addUser = async (prevState, formData: FormData) => {
+  const { username, email, password, img } = Object.fromEntries(formData);
+
+  try {
+    connectToDb();
+    const newUser = new UserModel({ username, email, password, img });
+
+    await newUser.save();
+    console.log("saved to Db");
+    revalidatePath("/admin");
+  } catch (err) {
+    console.log(err);
+    return { error: "Something went wrong!" };
+  }
+};
+
+export const deleteUser = async (formData: FormData) => {
+  const { id } = Object.fromEntries(formData);
+
+  try {
+    connectToDb();
+
+    await PostModel.deleteMany({ userId: id });
+    await UserModel.findByIdAndDelete(id);
+    console.log("deleted from Db");
+    revalidatePath("/admin");
   } catch (err) {
     console.log(err);
     return { error: "Something went wrong!" };
@@ -94,7 +128,9 @@ export const login = async (prevState, formData: FormData) => {
   try {
     await signIn("credentials", { username, password });
   } catch (error) {
-    console.log(error);
+    if (error.message.includes("CredentialsSignin")) {
+      return { error: "Invalid name or password" };
+    }
     throw error;
   }
 };
